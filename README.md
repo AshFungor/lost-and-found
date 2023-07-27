@@ -4,6 +4,9 @@ A game about *[HIDDEN]*
 
 ## Build
 
+Download assets and put them (5 .zip archives) in root/assets directory. Then run helper
+script to encrypt those, then, depending on your platform:
+
 Run on linux:
 
     make build

@@ -1,13 +1,15 @@
-from cryptography.fernet import Fernet
-import hashlib
-import sys
+# System imports
 import os
 import base64
+
+# Crypto imports
+from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
-
+# Size of chunk in encryption
 BLOCK_SIZE  =   2 ** 17
+# This needs to be up to date with Env constants
 MAIN_KEY    =   b'SCacvTazGALipT1MpEeaPf0X4xHz6OPNKXWiy8BUrSI='
 FILES       =   {'intro.encrypted'              : b'/\x04\x1bN\xba\xd3\x07\xbb\xee\x88\x17\x0cd=\xdd\xfe'   , 
                 'stars_are_right.encrypted'     : b'?\xdc\xb4\xf8v\xa1\r\x89\x1d\x1f7\x01\x9c\t\xad\xe0'    ,
@@ -31,8 +33,7 @@ def encrypt(file, key):
 
 def decrypt(file, key):
     in_file = open(file, 'rb')
-    out_filename = file.replace('.encrypted', '.zip')
-    out_file = open(out_filename, 'wb')
+    out_file = open(file.replace('.encrypted', '.zip'), 'wb')
     data = bytes()
     while True:
         block_size = int.from_bytes(in_file.read(16))
@@ -57,12 +58,17 @@ def derive_key(file, password):
 
 
 if __name__ == '__main__':
+    print('Encrypting Intro with MAIN_KEY...')
     encrypt(os.getcwd() + '/../assets/intro.zip', MAIN_KEY)
+    print('Encrypting Stars Are Right...')
     key_1 = derive_key('stars_are_right.encrypted', 'buer')
     encrypt(os.getcwd() + '/../assets/stars_are_right.zip', key_1)
+    print('Encrypting Luck Of The Draw...')
     key_2 = derive_key('luck_of_the_draw.encrypted', 'abigor')
     encrypt(os.getcwd() + '/../assets/luck_of_the_draw.zip', key_2)
+    print('Encrypting Last Message...')
     key_3 = derive_key('last_message.encrypted', 'alastor')
     encrypt(os.getcwd() + '/../assets/last_message.zip', key_3)
+    print('Encrypting DELETE THIS...')
     key_4 = derive_key('DELETE_THIS.encrypted', 'azazel')
     encrypt(os.getcwd() + '/../assets/DELETE_THIS.zip', key_4)

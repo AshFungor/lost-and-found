@@ -5,18 +5,15 @@
 PYTHON = python
 PIP = pip
 
-PIP_OPTIONS = --break-system-packages
-
 RM_COMMAND = rd
 RM_OPTIONS = /s /q
-MKDIR_COMMAND = mkdir
-MKDIR_OPTIONS = 
+MKDIR_COMMAND = md
 
 COPY_COMMAND = xcopy
 COPY_OPTIONS = /e /i
 
 build: install-deps clean
-	$(MKDIR_COMMAND) $(MKDIR_OPTIONS) build\dist
+	$(MKDIR_COMMAND) build\dist
 	$(COPY_COMMAND) $(COPY_OPTIONS) assets\ build\resources
 	pyinstaller --distpath build\dist\			\
 	 --specpath build\					\

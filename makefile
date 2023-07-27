@@ -7,12 +7,12 @@ PIP = pip3
 
 PIP_OPTIONS = --break-system-packages
 
-RM 		= rm
-RM_OPTIONS 	= -rf
-MKDIR 		= mkdir
-MKDIR_OPTIONS	= -p
-COPY		= cp
-COPY_OPTIONS	= -r
+RM = rm
+RM_OPTIONS = -rf
+MKDIR = mkdir
+MKDIR_OPTIONS = -p
+COPY = cp
+COPY_OPTIONS = -r
 
 
 build: install-deps

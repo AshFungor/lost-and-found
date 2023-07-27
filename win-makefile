@@ -1,0 +1,37 @@
+.PHONY: build
+.PHONY: clean
+.PHONY: install-deps
+
+PYTHON = python
+PIP = pip
+
+PIP_OPTIONS = --break-system-packages
+
+RM_COMMAND = del
+RM_OPTIONS = /s /q
+MKDIR_COMMAND = mkdir
+MKDIR_OPTIONS = 
+
+COPY_COMMAND = xcopy
+COPY_OPTIONS = /e /i
+
+build: install-deps
+    $(MKDIR_COMMAND) $(MKDIR_OPTIONS) build\dist
+    $(COPY_COMMAND) $(COPY_OPTIONS) assets\ build\resources
+    pyinstaller ^
+        --distpath build\dist\ ^
+        --specpath build\ ^
+        -F ^
+        --noconfirm ^
+        -p src\ src\main.py ^
+        --add-data "resources\intro.encrypted;." ^
+        --add-data "resources\stars_are_right.encrypted;." ^
+        --add-data "resources\luck_of_the_draw.encrypted;." ^
+        --add-data "resources\last_message.encrypted;." ^
+        --add-data "resources\DELETE_THIS.encrypted;."
+        
+install-deps:
+    $(PIP) install $(PIP_OPTIONS) -r requirements.txt
+    
+clean:
+    $(RM_COMMAND) $(RM_OPTIONS) build

@@ -1,4 +1,5 @@
 # Encypted files are too large (and zips too)
+assets/
 *.encypted
 *.zip
 

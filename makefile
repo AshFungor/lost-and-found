@@ -1,6 +1,6 @@
-.PHONY = build
-.PHONY = clean
-.PHONY = install-deps
+.PHONY: build
+.PHONY: clean
+.PHONY: install-deps
 
 PYTHON = python3
 PIP = pip3

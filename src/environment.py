@@ -21,23 +21,11 @@ class Env():
                     'DELETE_THIS.encrypted'         : False}
     settings =      'config.pkl'
 
-
-    def __new__(cls, *args, **kwargs):
-        abs_settings = Env.extend_path_exe(Env.settings)
-        if os.path.exists(abs_settings):
-            settings_file = open(abs_settings, 'rb')
-            inst = pickle.load(settings_file)
-            inst.loaded = True
-            settings_file.close()
-            return inst
-        return super().__new__(cls, *args, **kwargs)
-
     def __init__(self):
-        if not hasattr(self, 'loaded'):
-            # Initialize with defaults
-            self.main_key = Env.main_key
-            self.archives = Env.archives
-            self.unlocks = Env.unlocks
+        # Initialize with defaults
+        self.main_key = Env.main_key
+        self.archives = Env.archives
+        self.unlocks = Env.unlocks
 
     def save(self):
         abs_settings = Env.extend_path_exe(Env.settings)
@@ -58,10 +46,16 @@ class Env():
 
     @staticmethod
     def extend_path_exe(original_path):
-        return os.path.dirname(sys.executable) + original_path
+        return os.path.dirname(sys.executable) + '/' + original_path
 
 Env.check_state()
+abs_settings = Env.extend_path_exe(Env.settings)
 # Current config 
-settings = Env()
+if os.path.exists(abs_settings):
+    settings_file = open(abs_settings, 'rb')
+    settings = pickle.load(settings_file)
+    settings_file.close()
+else:
+    settings = Env()
 
 

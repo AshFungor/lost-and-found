@@ -29,15 +29,14 @@ class ArchiveController():
 
     def force(self, target, password=None):
         res = None
-        try:
-            if password is None:
-                res = self._decrypt_archive(Env.extend_path_pkg(target), 
-                                            self._main_key)
-            else:
-                # convert to key first
-                key = self._pass_to_key(password, self._salts[target])
-                res = self._decrypt_archive(Env.extend_path_pkg(target), key)
-        except InvalidToken:
+        if password is None:
+            res = self._decrypt_archive(Env.extend_path_pkg(target), 
+                                        self._main_key)
+        else:
+            # convert to key first
+            key = self._pass_to_key(password, self._salts[target])
+            res = self._decrypt_archive(Env.extend_path_pkg(target), key)
+        if res is None:
             return False
         self._unpack(res)
         settings.unlocks[target] = self._unlocks[target] = True
@@ -50,6 +49,7 @@ class ArchiveController():
         zip_file = zipfile.ZipFile(file, 'r')
         zip_file.extractall(Env.extend_path_exe(''))
         zip_file.close()
+        os.remove(file)
 
         
     def _pass_to_key(self, password, salt):
@@ -70,12 +70,20 @@ class ArchiveController():
             if not block_size:
                 break
             block = in_file.read(block_size)
-            f = Fernet(key)
-            output = f.decrypt(block)
+            try:
+                f = Fernet(key)
+                output = f.decrypt(block)
+            except InvalidToken:
+                self._decrypt_archive_cleanup(in_file, out_file)
+                os.remove(out_filename)
+                return None
             out_file.write(output)
             data += output
+        self._decrypt_archive_cleanup(in_file, out_file)
+        return out_filename
+
+    def _decrypt_archive_cleanup(self, in_file, out_file):
         in_file.close()
         out_file.close()
-        return out_filename         
         
 current = ArchiveController()

@@ -16,8 +16,9 @@ COPY_OPTIONS = -r
 
 
 build: install-deps
+	cd scripts && $(PYTHON) helper.py
 	$(MKDIR) $(MKDIR_OPTIONS) build/dist
-	$(COPY)  $(COPY_OPTIONS) assets/ build/resources
+	$(COPY)  $(COPY_OPTIONS) assets/*.encrypted build/resources
 	pyinstaller 							\
 		--distpath build/dist/ 					\
 		--specpath build/ 					\

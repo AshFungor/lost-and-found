@@ -12,7 +12,7 @@ MKDIR_COMMAND = md
 COPY_COMMAND = xcopy
 COPY_OPTIONS = /e /i
 
-build: install-deps clean
+build: install-deps
 	$(MKDIR_COMMAND) build\dist
 	$(COPY_COMMAND) $(COPY_OPTIONS) assets\ build\resources
 	pyinstaller --distpath build\dist\			\

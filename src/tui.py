@@ -6,6 +6,7 @@ from asciimatics.scene          import Scene
 # Local imports
 from messages   import msg
 from archiving  import current
+from environment import settings
 
 # Presets
 HEADER_SIZE = 2 / 7
@@ -14,6 +15,7 @@ FOOTER_SIZE = 1 / 7
 class Model():
     curr_archive = None
     archives = current.list_archives()
+    unlocks = current.list_unlocks()
 
 class ArchiveView(asc.Frame):
     def __init__(self, screen):
@@ -27,7 +29,7 @@ class ArchiveView(asc.Frame):
         super().set_theme('bright')
         # Layouts
         header  = asc.Layout([100])
-        main    = asc.Layout([100], fill_frame=True)
+        main    = asc.Layout([3, 1], fill_frame=True)
         footer  = asc.Layout([1, 1])
         self.add_layout(header)
         self.add_layout(main)
@@ -41,18 +43,28 @@ class ArchiveView(asc.Frame):
         self._header_textbox.value = msg.open_msg
         header.add_widget(self._header_textbox)
         # Main widgets
-        self._archives_listbox = asc.ListBox(asc.Widget.FILL_FRAME,
+        self._unlock_listbox = asc.ListBox(asc.Widget.FILL_COLUMN,
+                                           Model.unlocks,
+                                           name='unlocks')
+        self._unlock_listbox.disabled = True
+        self._archives_listbox = asc.ListBox(asc.Widget.FILL_COLUMN,
                                              Model.archives,
                                              name = 'archives', 
                                              on_change=self._select,
                                              on_select=self._pick)
-        main.add_widget(self._archives_listbox)
+        main.add_widget(self._unlock_listbox, 1)
+        main.add_widget(self._archives_listbox, 0)
         # Footer widgets
         self._quit_button   = asc.Button('Quit', self._quit)
         self._unlock_button = asc.Button('Unlock', self._pick)
         footer.add_widget(self._quit_button, 0)
         footer.add_widget(self._unlock_button, 1)
         self.fix()
+
+    def update(self, frame):
+        super().update(frame)
+        Model.unlocks = current.list_unlocks()
+        self._unlock_listbox.options = Model.unlocks
 
     def _reload_archives(self, option=None):
         self._archives_listbox.options = Model.archives

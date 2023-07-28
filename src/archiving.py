@@ -26,6 +26,11 @@ class ArchiveController():
     def list_archives(self):
         return [(os.path.basename(archive), os.path.basename(archive)) 
                 for archive in self._archives]
+    
+    def list_unlocks(self):
+        return [('[UNLOCKED]' if self._unlocks[os.path.basename(archive)] else '[LOCKED]', 
+                 os.path.basename(archive)) 
+                 for archive in self._archives]
 
     def force(self, target, password=None):
         res = None

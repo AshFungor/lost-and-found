@@ -1,5 +1,4 @@
 # TUI
-import asciimatics.screen
 import asciimatics.widgets      as asc
 import asciimatics.exceptions   as asc_ex
 from asciimatics.scene          import Scene
@@ -25,6 +24,7 @@ class ArchiveView(asc.Frame):
                          can_scroll=False, 
                          has_border=False,
                          hover_focus=True)
+        super().set_theme('bright')
         # Layouts
         header  = asc.Layout([100])
         main    = asc.Layout([100], fill_frame=True)
@@ -80,6 +80,7 @@ class UnlockView(asc.Frame):
                          width, 
                          hover_focus=True, 
                          can_scroll=False)
+        super().set_theme('bright')
         # Layouts
         main = asc.Layout([100], fill_frame=True)
         header = asc.Layout([100])
@@ -116,6 +117,9 @@ class UnlockView(asc.Frame):
     def _force(self, with_password=False):
         success = None
         self._header_text.value = msg.archive_chosen.format(Model.curr_archive)
+        self._force_def_button.disabled = True
+        self._force_key_button.disabled = True
+        self._back_button.disabled      = True
         if not with_password:
             self._header_text.value += '\n' + \
                 msg.archive_try_key_default.format(Model.curr_archive)
@@ -130,6 +134,9 @@ class UnlockView(asc.Frame):
             self._header_text.value += '\n' + msg.archive_decrypt_reminder
         else:
             self._header_text.value += '\n' + msg.archive_decrypt_fail
+        self._force_def_button.disabled = False
+        self._force_key_button.disabled = False
+        self._back_button.disabled      = False
 
     def _force_private(self):
         self._force(True)
